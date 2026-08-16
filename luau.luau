@@ -237,6 +237,49 @@ function NexusUI.CreateWindow(config)
             return btn
         end
 
+        -- Direct Textbox on Tab
+        function Tab:AddTextbox(text, placeholder, callback)
+            local boxFrame = create("Frame", {
+                Size = UDim2.new(1, 0, 0, 32),
+                BackgroundColor3 = NexusUI.Theme.Container,
+                BorderSizePixel = 0,
+                Parent = tabContainer,
+            })
+
+            create("TextLabel", {
+                Size = UDim2.new(0.5, -8, 1, 0),
+                Position = UDim2.fromOffset(8, 0),
+                BackgroundTransparency = 1,
+                Text = text,
+                Font = Enum.Font.GothamMedium,
+                TextSize = 11,
+                TextColor3 = NexusUI.Theme.TextPrimary,
+                TextXAlignment = Enum.TextXAlignment.Left,
+                Parent = boxFrame,
+            })
+
+            local textBox = create("TextBox", {
+                Size = UDim2.new(0.5, -8, 0, 22),
+                Position = UDim2.new(0.5, 0, 0.5, -11),
+                BackgroundColor3 = NexusUI.Theme.Element,
+                BorderSizePixel = 0,
+                Text = "",
+                PlaceholderText = placeholder or "Enter text...",
+                Font = Enum.Font.Gotham,
+                TextSize = 11,
+                TextColor3 = NexusUI.Theme.TextPrimary,
+                PlaceholderColor3 = NexusUI.Theme.TextSecondary,
+                ClearTextOnFocus = false,
+                Parent = boxFrame,
+            })
+
+            textBox.FocusLost:Connect(function(enterPressed)
+                if callback then callback(textBox.Text, enterPressed) end
+            end)
+
+            return boxFrame
+        end
+
         -- Select Tab Logic
         local function selectTab()
             for _, t in pairs(Window.Tabs) do
@@ -365,6 +408,39 @@ function NexusUI.CreateWindow(config)
                     task.wait(0.08)
                     animate(btn, TweenInfo.new(0.1), { BackgroundColor3 = NexusUI.Theme.Element })
                     if callback then callback() end
+                end)
+            end
+
+            function Section:AddTextbox(text, placeholder, callback)
+                local boxFrame = create("Frame", { Size = UDim2.new(1, 0, 0, 26), BackgroundTransparency = 1, Parent = elementList })
+                create("TextLabel", {
+                    Size = UDim2.new(0.5, 0, 1, 0),
+                    BackgroundTransparency = 1,
+                    Text = text,
+                    Font = Enum.Font.Gotham,
+                    TextSize = 11,
+                    TextColor3 = NexusUI.Theme.TextPrimary,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    Parent = boxFrame,
+                })
+
+                local textBox = create("TextBox", {
+                    Size = UDim2.new(0.5, 0, 0, 22),
+                    Position = UDim2.new(0.5, 0, 0.5, -11),
+                    BackgroundColor3 = NexusUI.Theme.Element,
+                    BorderSizePixel = 0,
+                    Text = "",
+                    PlaceholderText = placeholder or "Type here...",
+                    Font = Enum.Font.Gotham,
+                    TextSize = 11,
+                    TextColor3 = NexusUI.Theme.TextPrimary,
+                    PlaceholderColor3 = NexusUI.Theme.TextSecondary,
+                    ClearTextOnFocus = false,
+                    Parent = boxFrame,
+                })
+
+                textBox.FocusLost:Connect(function(enterPressed)
+                    if callback then callback(textBox.Text, enterPressed) end
                 end)
             end
 
