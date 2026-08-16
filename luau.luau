@@ -213,6 +213,30 @@ function NexusUI.CreateWindow(config)
 
         local Tab = { Container = tabContainer, Button = tabButton, LayoutOrder = currentOrder }
 
+        -- Direct Button on Tab (without needing a Section)
+        function Tab:AddButton(text, callback)
+            local btn = create("TextButton", {
+                Size = UDim2.new(1, 0, 0, 28),
+                BackgroundColor3 = NexusUI.Theme.Container,
+                BorderSizePixel = 0,
+                Text = text,
+                Font = Enum.Font.GothamMedium,
+                TextSize = 11,
+                TextColor3 = NexusUI.Theme.TextPrimary,
+                AutoButtonColor = false,
+                Parent = tabContainer,
+            })
+
+            btn.MouseButton1Click:Connect(function()
+                animate(btn, TweenInfo.new(0.08), { BackgroundColor3 = NexusUI.Theme.Accent })
+                task.wait(0.08)
+                animate(btn, TweenInfo.new(0.1), { BackgroundColor3 = NexusUI.Theme.Container })
+                if callback then callback() end
+            end)
+
+            return btn
+        end
+
         -- Select Tab Logic
         local function selectTab()
             for _, t in pairs(Window.Tabs) do
